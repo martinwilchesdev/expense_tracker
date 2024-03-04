@@ -15,13 +15,20 @@ export const useTransactionStore = defineStore('transaction', () => {
             amount: param.amount
         })
 
-        param.amount > 0 ? (income.value += Number(param.amount)) : (expense.value += Number(param.amount))
+        param.amount > 0
+            ? (income.value += Number(param.amount))
+            : (expense.value += Number(param.amount))
+    }
+
+    function deleteTransaction(param) {
+        transactions.value = transactions.value.filter((transaction) => transaction.id != param.id)
+        param.amount > 0 ? (income.value -= param.amount) : (expense.value -= param.amount)
     }
 
     // Computed
     const balance = computed(() => {
-      return Number(income.value) - Math.abs(Number(expense.value))
+        return Number(income.value) - Math.abs(Number(expense.value))
     })
 
-    return { transactions, addTransaction, expense, income, balance }
+    return { transactions, addTransaction, expense, income, balance, deleteTransaction }
 })
